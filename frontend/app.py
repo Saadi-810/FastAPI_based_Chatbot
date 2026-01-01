@@ -18,6 +18,8 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
+        
+
 # User input
 user_input = st.chat_input("Type your message...")
 
@@ -30,15 +32,18 @@ if user_input:
         st.markdown(user_input)
 
     # Call backend API
-    response = requests.post(
-        BACKEND_URL,
-        json={"message": user_input}
-    )
+    try:
+        response = requests.post(
+            BACKEND_URL,
+            json={"message": user_input}
+        )
 
-    if response.status_code == 200:
-        reply = response.json()["reply"]
-    else:
-        reply = "⚠️ Error communicating with backend."
+        if response.status_code == 200:
+            reply = response.json()["reply"]
+        else:
+            reply = f"⚠️ Error communicating with backend. Status: {response.status_code}, Response: {response.text}"
+    except Exception as e:
+        reply = f"⚠️ Error communicating with backend. Exception: {str(e)}"
 
     # Show assistant message
     st.session_state.messages.append(
