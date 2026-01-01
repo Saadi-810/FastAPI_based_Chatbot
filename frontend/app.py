@@ -2,7 +2,12 @@ import streamlit as st
 import requests
 import os 
 # Backend API URL
-BACKEND_URL = os.environ.get("BACKEND_URL", "http://127.0.0.1:8000/chat")
+# Get base URL from environment and ensure /chat endpoint is included
+BASE_URL = os.environ.get("BACKEND_URL", "http://127.0.0.1:8000")
+# Remove trailing slash if present and ensure /chat is appended
+BACKEND_URL = BASE_URL.rstrip("/")
+if not BACKEND_URL.endswith("/chat"):
+    BACKEND_URL = f"{BACKEND_URL}/chat"
 
 st.set_page_config(page_title="LLM Chatbot", page_icon="🤖")
 
